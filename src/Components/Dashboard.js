@@ -19,13 +19,23 @@ const Dashboard = ({token}) => {
         .catch(err => console.log(err))
     }
 
+    function logout(){
+          axios.delete("https://instagram-express-app.vercel.app/api/auth/logout",{
+            headers:{
+                authorization: `Bearer ${token}`  
+          }})
+            .then(res => alert("Logout successfully done"))
+            .catch(err => console.log(err))
+    }
+
 
 
     return (
         <div>
             <h1>Dashboard</h1>
-            <button>Get Joke</button>
+            <button onClick={getJoke}>Get Joke</button>
             {joke && <h2>{joke}</h2>}
+            <button onClick={logout}> Logout </button>
         </div>
     );
 }
