@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import axios from 'axios';
+import UserContext from '../Context/UserContext';
+
+import {useNavigate} from "react-router-dom";
 
 
-
-const Signup = ({setToken}) => {
+const Signup = () => {
     const [user, setUser] = useState({name: '', email: '', password: '', confirmPassword: ''});
+    const {setToken} = useContext(UserContext)
+    const navigate = useNavigate();
      const {name, email, password, confirmPassword} = user;
     console.log(user)
 
@@ -22,8 +26,10 @@ const Signup = ({setToken}) => {
         })
         .then(res => {
             console.log(res.data.data.token)
+            localStorage.setItem("token", res.data.data.token)
             setToken(res.data.data.token)
             alert("User created successfully")
+            navigate("/dashboard")
         })
         .catch(err => console.log(err))
     }

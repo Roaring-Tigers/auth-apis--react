@@ -1,11 +1,32 @@
-import React,{useState} from "react";
+import React,{useState,useContext, useEffect} from "react";
 import axios from  "axios";
+import UserContext from "../Context/UserContext";
+
+import {useNavigate} from "react-router-dom";
 
 
-const Dashboard = ({token}) => {
+const Dashboard = () => {
     const [joke, setJoke] = useState("")
+    const [name, setName] = useState("")
+    const {token,setToken} = useContext(UserContext)
+    const navigate = useNavigate();
 
 
+    useEffect(()=>{
+        if(!token){
+            let newToken = localStorage.getItem("token")
+            if(!newToken){
+                navigate("/login")
+            }
+            else{
+                setToken(newToken)
+            }
+        }
+    },[])
+
+    useEffect(()=>{
+        getJoke()
+    },[token])
 
     function getJoke(){
         axios.get("https://instagram-express-app.vercel.app/api/auth/zuku",{
@@ -15,7 +36,9 @@ const Dashboard = ({token}) => {
         })
         .then(res => {
              console.log("hello joke")
-            setJoke(res.data.data.message)})
+            setJoke(res.data.data.message)
+            setName(res.data.data.user.name)
+        })
         .catch(err => console.log(err))
     }
 
@@ -24,7 +47,14 @@ const Dashboard = ({token}) => {
             headers:{
                 authorization: `Bearer ${token}`  
           }})
-            .then(res => alert("Logout successfully done"))
+            .then(res => {
+                localStorage.removeItem("token")
+                setToken("")
+                setName("")
+                setJoke("")
+                alert("Logout successfully done")
+                navigate("/login")
+            })
             .catch(err => console.log(err))
     }
 
@@ -32,9 +62,9 @@ const Dashboard = ({token}) => {
 
     return (
         <div>
-            <h1>Dashboard</h1>
-            <button onClick={getJoke}>Get Joke</button>
-            {joke && <h2>{joke}</h2>}
+            <h1>Welcome {name}</h1>
+            
+            {joke && <p>{joke}</p>}
             <button onClick={logout}> Logout </button>
         </div>
     );

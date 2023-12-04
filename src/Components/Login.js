@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import axios from 'axios';
+import UserContext from "../Context/UserContext";
+
+import {useNavigate} from "react-router-dom";
 
 
 
-const Login = ({setToken}) => {
+const Login = () => {
     const [user, setUser] = useState({ email: '', password: ''});
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
+    
+    const {setToken} = useContext(UserContext)
+
      const { email, password} = user;
 
     console.log(user)
@@ -23,8 +31,10 @@ const Login = ({setToken}) => {
         })
         .then(res => {
             console.log(res.data.data.token)
+            localStorage.setItem("token", res.data.data.token)
             setToken(res.data.data.token)
             alert("Login successfully done")
+            navigate("/dashboard")
         })
         .catch(err => setError(err.response.data.message))
     }

@@ -2,19 +2,25 @@ import { useState } from "react";
 import Signup from "./Components/Signup";
 import Login from "./Components/Login";
 import Dashboard from "./Components/Dashboard";
+import ImageUpload from "./Components/ImageUpload";
+
+import {Routes, Route} from "react-router-dom";
 
 function App() {
-  const [token, setToken] = useState("");
-
-  console.log("token", token);
+  
 
   return (
     <div>
-      <Signup  setToken={setToken}/>
-      <Login setToken={setToken}/>
-      <Dashboard token={token}/>
+      <ImageUpload />
+      {/* <Routes>
+        <Route path="/" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes> */}
     </div>
   );
 }
 
 export default App;
+
+
